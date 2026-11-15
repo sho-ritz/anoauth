@@ -1,0 +1,37 @@
+{
+  "name": "@anoauth/core",
+  "version": "0.1.0",
+  "description": "Who may join a shared anoDB space: invite links, approval, signed certificates (OIDC via @anoauth/oidc)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "docs/DECISIONS.md"],
+  "sideEffects": false,
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@noble/hashes": "^2.4.0",
+    "nostr-tools": "^2.26.0"
+  },
+  "peerDependencies": {
+    "@anodb/core": "^0.10.0"
+  },
+  "devDependencies": {
+    "@anodb/core": "file:../anodb",
+    "@types/node": "^26.6.6",
+    "@types/ws": "^8.18.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0",
+    "ws": "^8.22.2"
+  }
+}
