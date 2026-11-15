@@ -7,7 +7,7 @@ anoDB only knows public keys: it adds members (`addMember(space, npub, role, { d
 them and delivers the encryption keys. anoAuth runs on the owner's and admins' devices, decides whether
 a request qualifies, and calls `addMember`. No server is required.
 
-> **Status: v0.1 / experimental.** Packages: `@anoauth/core`, `@anoauth/oidc`, `@anoauth/react` (not on npm yet). Design decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
+> **Status: v0.1 / experimental.** Packages: `@anoauth/core`, `@anoauth/oidc`, `@anoauth/react`, `@anoauth/cli`. Design decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Setup
 
@@ -41,7 +41,7 @@ await auth.admissions(team)                      // who joined, how, and when th
 
 - Rules are evaluated in order; the first match decides. `proof: 'link'` admits anyone with the link.
 - Requests are handled automatically by any owner / admin device that is online. Until one is, the
-  applicant waits.
+  applicant waits — or run the **gatekeeper** (below).
 - Rules, links, requests and admission records live in a separate **admin space** (the space's owner
   and admins only). Regular members can't read or change them.
 - Only the owner can create rules that grant `admin`, and only the owner's device admits admins.
@@ -99,6 +99,18 @@ leaked token is useless to anyone else; admins check the provider's signature, i
 ```
 
 Used by [anoChat](https://github.com/sho-ritz/anodb-family-list).
+
+## Gatekeeper (`@anoauth/cli`)
+
+An always-on admin device that admits qualifying requests while your admins are offline:
+
+```sh
+npx @anoauth/cli gatekeeper --app com.example.app --trust npub1owner… [--google-client-id …]
+# from the owner's app, once: db.addMember(space, '<gatekeeper npub>', 'admin')
+```
+
+It joins only spaces offered by the owners you trust, keeps its keys in a mode-600 file, and can
+read the spaces it guards (it is an admin): run it on a machine you trust.
 
 ## Custom proof types and decisions
 

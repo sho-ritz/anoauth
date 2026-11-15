@@ -3,12 +3,42 @@
   "version": "0.1.0",
   "description": "Sign in with Google / Microsoft / any OpenID Connect provider to join an anoDB space (anoAuth)",
   "license": "MIT",
+  "author": "show-ritz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sho-ritz/anoauth.git",
+    "directory": "packages/oidc"
+  },
+  "homepage": "https://github.com/sho-ritz/anoauth#readme",
+  "keywords": [
+    "anodb",
+    "anoauth",
+    "oidc",
+    "google",
+    "sso"
+  ],
   "type": "module",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist"
+  ],
   "sideEffects": false,
-  "scripts": { "build": "tsc -p tsconfig.json" },
-  "peerDependencies": { "@anoauth/core": "^0.1.0" }
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@anoauth/core": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

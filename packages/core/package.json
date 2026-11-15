@@ -1,8 +1,23 @@
 {
   "name": "@anoauth/core",
   "version": "0.1.0",
-  "description": "Who may join a shared anoDB space: invite links, approval, signed certificates (OIDC via @anoauth/oidc)",
+  "description": "Who may join a shared anoDB space: rules, invite links, approval, signed certificates",
   "license": "MIT",
+  "author": "show-ritz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sho-ritz/anoauth.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/sho-ritz/anoauth#readme",
+  "keywords": [
+    "anodb",
+    "anoauth",
+    "nostr",
+    "local-first",
+    "invite",
+    "auth"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -24,9 +39,14 @@
     "@anodb/core": "^0.10.0"
   },
   "files": [
+    "LICENSE",
+    "README.md",
     "dist"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -5,10 +5,11 @@
   "workspaces": [
     "packages/core",
     "packages/oidc",
-    "packages/react"
+    "packages/react",
+    "packages/cli"
   ],
   "scripts": {
-    "build": "npm run build -w packages/core -w packages/oidc -w packages/react",
+    "build": "npm run build -w packages/core -w packages/oidc -w packages/react -w packages/cli",
     "test": "vitest run"
   },
   "devDependencies": {
