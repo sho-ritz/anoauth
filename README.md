@@ -1,13 +1,13 @@
 # anoAuth
 
 **Who may join** a shared [anoDB](https://github.com/sho-ritz/anodb) space — invite links, admin approval,
-certificates from an issuer you trust, and (soon) sign-in with Google / Microsoft / your company's SSO.
+certificates from an issuer you trust, and sign-in with Google / Microsoft / your company's SSO.
 
 anoDB only knows public keys: it adds members (`addMember(space, npub, role, { devices })`), removes
 them and delivers the encryption keys. anoAuth runs on the owner's and admins' devices, decides whether
 a request qualifies, and calls `addMember`. No server is required.
 
-> **Status: v0.1 / experimental.** Design decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
+> **Status: v0.1 / experimental.** Packages: `@anoauth/core`, `@anoauth/oidc`, `@anoauth/react` (not on npm yet). Design decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Setup
 
@@ -72,6 +72,33 @@ const certificate = issueCertificate(issuerSecretKey, {
   expiresAt: Date.now() + 7 * 86_400_000,
 })
 ```
+
+## Sign in with Google / Microsoft / SSO (`@anoauth/oidc`)
+
+```ts
+import { GOOGLE, handleOidcRedirect, oidcProofSource, oidcVerifier } from '@anoauth/oidc'
+
+if (handleOidcRedirect()) { /* this is the sign-in popup: stop here */ }
+const auth = await createAnoAuth(db, { verifiers: [oidcVerifier({ providers: [{ issuer: GOOGLE, clientId }] })] })
+await auth.setRules(team, [{ proof: { type: 'oidc', issuer: GOOGLE }, emailDomain: 'company.com', role: 'writer' }])
+```
+
+Register an OAuth client at the provider with your app's URL as JavaScript origin and redirect URI.
+The token is requested in the browser with a nonce bound to the applicant's key and the link, so a
+leaked token is useless to anyone else; admins check the provider's signature, issuer and audience.
+
+## React (`@anoauth/react`)
+
+```tsx
+<AnoAuthProvider auth={auth}>
+  <InviteLinks space={id} />     {/* owners / admins: create, QR, copy, revoke */}
+  <JoinRequests space={id} />    {/* approve / reject */}
+  <RulesEditor space={id} />     {/* who may join */}
+  <JoinWithLink proofs={[oidcProofSource({ issuer: GOOGLE, clientId, label: 'Continue with Google' })]} onJoined={open} />
+</AnoAuthProvider>
+```
+
+Used by [anoChat](https://github.com/sho-ritz/anodb-family-list).
 
 ## Custom proof types and decisions
 

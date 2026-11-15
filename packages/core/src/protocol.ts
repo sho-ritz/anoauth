@@ -15,6 +15,11 @@ export const h32 = (s: string) => sha256Hex(s).slice(0, 32)
 
 /** Only holders of the secret can compute the tag or read the envelope. */
 export const secretTag = (secret: string) => h32(`anoauth/v1/tag/${secret}`)
+/**
+ * Nonce that binds an external proof (e.g. an OIDC ID token) to one applicant key and one link (or
+ * a space's renewal channel): a token issued with it is useless for any other key or link.
+ */
+export const proofNonce = (identity: string, secret: string) => sha256Hex(`anoauth/v1/nonce/${identity}/${secret}`)
 const secretKey = (secret: string) => sha256(utf8ToBytes(`anoauth/v1/key/${secret}`))
 
 export interface ProofEnvelope {

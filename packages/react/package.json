@@ -1,0 +1,14 @@
+{
+  "name": "@anoauth/react",
+  "version": "0.1.0",
+  "description": "React components for anoAuth: invite links, join screen, join requests, rule editor",
+  "license": "MIT",
+  "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "sideEffects": false,
+  "scripts": { "build": "tsc -p tsconfig.json" },
+  "peerDependencies": { "@anoauth/core": "^0.1.0", "@anodb/core": "^0.10.0", "react": ">=18" }
+}

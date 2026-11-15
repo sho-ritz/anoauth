@@ -19,11 +19,11 @@
     "declaration": true,
     "sourceMap": true,
     "outDir": "dist",
-    "rootDir": ".",
+    
     "jsx": "react-jsx"
   },
   "include": [
-    "src",
-    "test"
+    "packages/*/src",
+    "packages/*/test"
   ]
 }

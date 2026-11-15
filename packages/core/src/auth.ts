@@ -1,6 +1,6 @@
 import { type AnoDB, DEFAULT_RELAYS, type Invitation, type NostrEvent, RelayPool, type RelayPoolOptions, type Role } from '@anodb/core'
 import * as nip19 from 'nostr-tools/nip19'
-import { type ParsedLink, type ProofEnvelope, REQUEST_KIND, type RequestPayload, TAG, formatLink, h32, openRequest, parseLink, randomHex, sealRequest, secretTag } from './protocol.js'
+import { type ParsedLink, type ProofEnvelope, REQUEST_KIND, proofNonce, type RequestPayload, TAG, formatLink, h32, openRequest, parseLink, randomHex, sealRequest, secretTag } from './protocol.js'
 import { type GrantRole, type Rule, matchProof, revalidateDaysOf, validRule } from './rules.js'
 import { type Verified, type Verifier, certificateVerifier } from './verifier.js'
 
@@ -70,7 +70,9 @@ export interface AdmissionInfo {
 }
 
 const DAY = 86_400_000
-const ADMIN_PREFIX = 'anoauth-admin:'
+/** Admin spaces are named with this prefix; hide them from lists of rooms / spaces. */
+export const ADMIN_PREFIX = 'anoauth-admin:'
+export const isAdminSpace = (s: { name: string }) => s.name.startsWith(ADMIN_PREFIX)
 const MANAGERS = new Set<Role | undefined>(['owner', 'admin'])
 const toHex = (s: string) => {
   if (s.startsWith('npub1')) {
@@ -346,6 +348,18 @@ export class AnoAuth {
     await this.#send(ch.secret, { v: 1, t: 'renew', space, identity: this.db.pubkey, devices: this.db.deviceDelegations(), name: '', proofs })
   }
 
+  /**
+   * The nonce to put into an external proof (OIDC `nonce`) for an invite link, or for renewing
+   * membership of a space.
+   */
+  async nonceFor(linkOrSpace: string): Promise<string> {
+    const l = parseLink(linkOrSpace)
+    if (l) return proofNonce(this.db.pubkey, l.secret)
+    const ch = (await this.#rows<{ secret: string }>('SELECT secret FROM "anoauthChannel" WHERE space = ? AND id = ?', [linkOrSpace, 'renewal']))[0]
+    if (!ch) throw new Error('anoAuth: not an invite link, and the space is not guarded by anoAuth')
+    return proofNonce(this.db.pubkey, ch.secret)
+  }
+
   /** Spaces this identity asked to join and that have not admitted it yet. */
   async pending(): Promise<string[]> {
     return (await this.#rows<{ id: string }>('SELECT id FROM "anoauthPending" WHERE space = ?', [this.db.personalSpace])).map((r) => r.id)
@@ -353,10 +367,16 @@ export class AnoAuth {
 
   async #send(secret: string, payload: RequestPayload): Promise<void> {
     const e = sealRequest(secret, payload, this.#now())
-    const deadline = Date.now() + 10_000
-    while (this.#pool.connected().length === 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 50))
-    const res = await this.#pool.publish(e)
-    if (![...res.values()].some((r) => r.outcome === 'ok')) throw new Error('anoAuth: no relay accepted the request; try again')
+    // Some relays refuse unknown pubkeys or are down: wait for a few connections, then retry until one stores it.
+    const want = Math.min(2, this.#pool.relays.length)
+    const start = Date.now()
+    while (this.#pool.connected().length < want && Date.now() - start < 6000) await new Promise((r) => setTimeout(r, 50))
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const res = await this.#pool.publish(e)
+      if ([...res.values()].some((r) => r.outcome === 'ok')) return
+      await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)))
+    }
+    throw new Error('anoAuth: no relay accepted the request; try again')
   }
 
   async #onInvitation(i: Invitation): Promise<void> {
