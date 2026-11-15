@@ -29,7 +29,8 @@
     "node": ">=22.13"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && chmod +x dist/main.js"
+    "build": "tsc -p tsconfig.json && chmod +x dist/main.js",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@anoauth/core": "^0.1.0",
