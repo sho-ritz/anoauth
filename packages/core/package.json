@@ -36,7 +36,7 @@
     "nostr-tools": "^2.26.0"
   },
   "peerDependencies": {
-    "@anodb/core": "^0.10.0"
+    "@anodb/core": "^0.10.1"
   },
   "files": [
     "LICENSE",
@@ -44,7 +44,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
     "prepublishOnly": "npm run build"
   },
   "publishConfig": {

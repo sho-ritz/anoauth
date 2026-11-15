@@ -31,12 +31,12 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "@anoauth/core": "^0.1.0",
-    "@anodb/core": "^0.10.0",
+    "@anodb/core": "^0.10.1",
     "react": ">=18"
   },
   "publishConfig": {

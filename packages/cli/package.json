@@ -29,13 +29,13 @@
     "node": ">=22.13"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json && chmod +x dist/main.js",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json && chmod +x dist/main.js",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@anoauth/core": "^0.1.0",
     "@anoauth/oidc": "^0.1.0",
-    "@anodb/core": "^0.10.0",
+    "@anodb/core": "^0.10.1",
     "nostr-tools": "^2.26.0"
   },
   "publishConfig": {
