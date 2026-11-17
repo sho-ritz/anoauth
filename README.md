@@ -98,7 +98,7 @@ leaked token is useless to anyone else; admins check the provider's signature, i
 </AnoAuthProvider>
 ```
 
-Used by [anoChat](https://github.com/sho-ritz/anodb-family-list).
+Used by [anoTalk](https://github.com/sho-ritz/anodb-family-list).
 
 ## Gatekeeper (`@anoauth/cli`)
 
