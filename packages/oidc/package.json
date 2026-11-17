@@ -1,6 +1,6 @@
 {
   "name": "@anoauth/oidc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Sign in with Google / Microsoft / any OpenID Connect provider to join an anoDB space (anoAuth)",
   "license": "MIT",
   "author": "show-ritz",
@@ -37,7 +37,7 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "@anoauth/core": "^0.1.0"
+    "@anoauth/core": "^0.1.1"
   },
   "publishConfig": {
     "access": "public"

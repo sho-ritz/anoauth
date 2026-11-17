@@ -1,6 +1,6 @@
 {
   "name": "@anoauth/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Who may join a shared anoDB space: rules, invite links, approval, signed certificates",
   "license": "MIT",
   "author": "show-ritz",
@@ -36,7 +36,7 @@
     "nostr-tools": "^2.26.0"
   },
   "peerDependencies": {
-    "@anodb/core": "^0.10.1"
+    "@anodb/core": "^0.10.1 || ^0.11.0"
   },
   "files": [
     "LICENSE",

@@ -1,6 +1,6 @@
 {
   "name": "@anoauth/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React components for anoAuth: invite links, join screen, join requests, rule editor",
   "license": "MIT",
   "author": "show-ritz",
@@ -35,8 +35,8 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "@anoauth/core": "^0.1.0",
-    "@anodb/core": "^0.10.1",
+    "@anoauth/core": "^0.1.1",
+    "@anodb/core": "^0.10.1 || ^0.11.0",
     "react": ">=18"
   },
   "publishConfig": {
